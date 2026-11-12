@@ -6,6 +6,7 @@ Licencia y condiciones: https://estradad.es/licencia.php.
 from __future__ import annotations
 
 import os
+import json
 from pathlib import Path
 import shutil
 import shlex
@@ -14,6 +15,8 @@ import sys
 import re
 from datetime import datetime
 from urllib.parse import quote, unquote, urlsplit
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, HTTPRedirectHandler, build_opener
 
 ROOT = Path(__file__).resolve().parent
 if ROOT.name.casefold() == 'proyecto':
@@ -28,8 +31,8 @@ Qué hace y dónde trabaja:
   Comprueba raíz, rama, archivos pendientes y exclusiones antes de escribir.
   Si falta .git propio, pregunta si quieres crearlo en el primer arranque interactivo.
   La respuesta predeterminada es No; nunca utiliza el Git padre de SRC-VED.
-  No crea repositorios en GitHub. init inicializa únicamente Git local.
-  El repositorio GitHub debe existir antes de publicar y tener su URL configurada.
+  No crea repositorios en GitHub sin preguntar. init inicializa únicamente Git local.
+  Si falta el destino en su cuenta, permite crearlo privado, público o no crearlo.
 
 Operaciones:
   --help                         Mostrar esta ayuda sin ejecutar Git ni conectar.
@@ -90,6 +93,10 @@ class GitError(Exception):
     def __init__(self, message, code=1):
         super().__init__(message)
         self.code = code
+
+
+class RemoteNotFound(GitError):
+    pass
 
 
 def environment():
@@ -294,11 +301,37 @@ class Repository:
                 check_publication(self, history=True)
         if effective and effective[0] in {'fetch', 'pull', 'push'}:
             options = secure_access(self)
-        result = subprocess.run([self.executable, '--no-pager', '-C', str(ROOT), *options, *args],
-                                cwd=ROOT, env=self.env, text=True, encoding='utf-8', errors='replace',
-                                stdout=subprocess.PIPE if capture else None,
-                                stderr=subprocess.PIPE if capture else None)
+        command = [self.executable, '--no-pager', '-C', str(ROOT), *options, *args]
+        if effective and effective[0] == 'push' and not capture:
+            # Keep browser instructions visible while retaining only redacted diagnostics.
+            process = subprocess.Popen(command, cwd=ROOT, env=self.env, text=True,
+                                       encoding='utf-8', errors='replace', stderr=subprocess.PIPE)
+            details = []
+            diagnostic_size = 0
+            try:
+                for line in process.stderr:
+                    safe = SECRET_PATTERN.sub(b'[SECRETO]', line.encode('utf-8')).decode('utf-8')
+                    print(safe, end='', file=sys.stderr, flush=True)
+                    if diagnostic_size < 65536:
+                        details.append(safe)
+                        diagnostic_size += len(safe)
+                result = subprocess.CompletedProcess(command, process.wait(), None, ''.join(details))
+            except BaseException:
+                if process.poll() is None:
+                    process.terminate()
+                    process.wait()
+                raise
+            finally:
+                process.stderr.close()
+        else:
+            result = subprocess.run(command, cwd=ROOT, env=self.env, text=True,
+                                    encoding='utf-8', errors='replace',
+                                    stdout=subprocess.PIPE if capture else None,
+                                    stderr=subprocess.PIPE if capture else None)
         if required and result.returncode:
+            if effective and effective[0] == 'push' and 'repository not found' in (result.stderr or '').casefold():
+                raise RemoteNotFound('GitHub no encuentra el repositorio o la cuenta autorizada no tiene acceso.',
+                                     result.returncode)
             raise GitError('Git no ha completado la operación; no se continuará.', result.returncode)
         return result
 
@@ -373,6 +406,118 @@ def check_remote(repo, name, *, push=False):
         raise GitError('No se puede determinar la URL del remoto. Elija 10 para configurarlo.')
     for url in urls:
         check_repository_url(url)
+
+
+class NoCredentialRedirect(HTTPRedirectHandler):
+    def redirect_request(self, request, file_pointer, code, message, headers, new_url):
+        return None
+
+
+def github_request(method, path, token, payload=None):
+    """Use credentials only in TLS headers to GitHub, never in URLs or diagnostics."""
+    request = Request('https://api.github.com' + path, method=method,
+                      data=json.dumps(payload).encode('utf-8') if payload is not None else None,
+                      headers={'Authorization': 'Bearer ' + token,
+                               'Accept': 'application/vnd.github+json',
+                               'Content-Type': 'application/json', 'User-Agent': 'project-git-controller'})
+    try:
+        with build_opener(NoCredentialRedirect()).open(request, timeout=30) as response:
+            return response.status, json.loads(response.read(1048576))
+    except HTTPError as error:
+        error.close()
+        return error.code, {}
+    except (URLError, OSError, ValueError):
+        raise GitError('No se pudo consultar GitHub de forma segura. No se ha creado el repositorio.') from None
+
+
+def git_credential(repo, options, operation, description):
+    # stdout contains credentials only for fill; it must never inherit the terminal.
+    result = subprocess.run([repo.executable, '--no-pager', '-C', str(ROOT), *options,
+                             'credential', operation], input=description, env=repo.env,
+                            cwd=ROOT, text=True, encoding='utf-8', errors='replace',
+                            stdout=subprocess.PIPE)
+    if result.returncode:
+        raise GitError('No se pudo obtener o guardar el acceso protegido de GitHub. '
+                       'No se ha creado el repositorio.', result.returncode)
+    return result.stdout
+
+
+def offer_github_creation(repo, remote_name):
+    check_secret(ROOT.name.encode('utf-8'))
+    check_publication(repo)
+    check_publication(repo, history=True)
+    url = repo.run('remote', 'get-url', '--push', remote_name, capture=True).stdout.strip()
+    check_repository_url(url)
+    parsed = urlsplit(url)
+    parts = unquote(parsed.path).strip('/').split('/')
+    if parsed.scheme != 'https' or parsed.hostname != 'github.com' or parsed.port not in (None, 443) or len(parts) != 2:
+        raise GitError('La creación automática requiere el destino HTTPS de GitHub de este proyecto.')
+    owner = parts[0]
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9-]*', owner):
+        raise GitError('La cuenta del repositorio no es válida.', 2)
+    print('Comprobando la cuenta autorizada y si falta el repositorio en GitHub...', flush=True)
+    options = secure_access(repo)
+    description = 'protocol=https\nhost=github.com\npath=' + parsed.path.strip('/') + '\n\n'
+    record = git_credential(repo, options, 'fill', description)
+    fields = dict(line.split('=', 1) for line in record.splitlines() if '=' in line)
+    token = fields.get('password', '')
+    if not token or fields.get('host') != 'github.com' or fields.get('protocol') != 'https':
+        raise GitError('No se pudo verificar el acceso a GitHub; no se ha creado el repositorio.')
+    status, user = github_request('GET', '/user', token)
+    if status != 200 or not isinstance(user.get('login'), str):
+        raise GitError('GitHub no ha validado la cuenta autorizada (HTTP ' + str(status) + ').')
+    print('Cuenta autorizada en GitHub: ' + user['login'])
+    if user['login'].casefold() != owner.casefold():
+        raise GitError('La cuenta autorizada no es la propietaria del destino. '
+                       'Use la cuenta propietaria o configure su propio origin con la opción avanzada 10.')
+    # Preserve the valid credential only in the selected wallet or memory cache.
+    git_credential(repo, options, 'approve', record.rstrip('\n') + '\n\n')
+    repository_path = '/repos/' + quote(owner, safe='') + '/' + quote(ROOT.name, safe='')
+    status, existing = github_request('GET', repository_path, token)
+    if status == 200:
+        print('El repositorio ya existe en su cuenta. Se reintentará la subida.')
+        return True
+    if status != 404:
+        raise GitError('No se puede confirmar que falte el repositorio (HTTP ' + str(status) + '). '
+                       'No se ha intentado crearlo.')
+    print('El repositorio no existe en su cuenta: ' + owner + '/' + ROOT.name)
+    answer = input('¿Lo creo? 1 Privado | 2 Público | 0 No crear [0]: ').strip().casefold()
+    if answer in ('', '0', 'n', 'no'):
+        print('Creación cancelada. El commit local se conserva.')
+        return False
+    if answer not in ('1', 'privado', '2', 'publico', 'público'):
+        raise GitError('Elija 1 para privado, 2 para público o 0 para no crear.', 2)
+    private = answer in ('1', 'privado')
+    visibility = 'privado' if private else 'público'
+    print('Se creará ' + owner + '/' + ROOT.name + ' (' + visibility + '), sin archivos iniciales.')
+    status, created = github_request('POST', '/user/repos', token,
+                                     {'name': ROOT.name, 'private': private, 'auto_init': False})
+    if status != 201 or created.get('private') is not private:
+        raise GitError('GitHub no ha confirmado la creación con la visibilidad solicitada (HTTP ' + str(status) + '). '
+                       'No se continuará con la subida.')
+    if str(created.get('full_name', '')).casefold() != (owner + '/' + ROOT.name).casefold():
+        raise GitError('GitHub devolvió un destino distinto del solicitado; subida detenida.')
+    print('[REPOSITORIO CREADO] ' + owner + '/' + ROOT.name + ' (' + visibility + ')', flush=True)
+    return True
+
+
+def push_branch(repo, remote_name, destination, *, set_upstream=False):
+    args = ['-c', 'remote.' + remote_name + '.mirror=false', 'push']
+    if set_upstream:
+        args.append('--set-upstream')
+    args += ['--', remote_name, 'HEAD:' + destination]
+    try:
+        repo.run(*args)
+    except RemoteNotFound:
+        if not offer_github_creation(repo, remote_name):
+            raise GitError('No se ha creado el destino ni completado la subida.')
+        print('Reintentando la subida al repositorio de GitHub...', flush=True)
+        previous_confirmation = repo.confirm
+        repo.confirm = False
+        try:
+            repo.run(*args)
+        finally:
+            repo.confirm = previous_confirmation
 
 
 def preferred_remote(repo, branch, remotes):
@@ -533,8 +678,7 @@ def main(argv=None, *, confirm=False):
             # A single explicit refspec avoids push.default=matching or configured push refspecs.
             check_remote(repo, remote_name, push=True)
             options = ['--set-upstream'] if args and args[0] in ('-u', '--set-upstream') else []
-            repo.run('-c', 'remote.' + remote_name + '.mirror=false', 'push', *options,
-                     '--', remote_name, 'HEAD:' + destination)
+            push_branch(repo, remote_name, destination, set_upstream=bool(options))
         elif action == 'remote':
             repo.run('remote', *(['show', '-n', *args[1:]] if args[0] == 'show' else args))
         else:
@@ -731,8 +875,7 @@ def upload_changes():
             print('[SIN COMMIT] No hay archivos que confirmar. No se ha publicado nada.')
             return 0
         print('[3/3] Subiendo a ' + url + '...', flush=True)
-        repo.run('-c', 'remote.' + remote_name + '.mirror=false', 'push', '--set-upstream',
-                 '--', remote_name, 'HEAD:refs/heads/' + branch)
+        push_branch(repo, remote_name, 'refs/heads/' + branch, set_upstream=True)
         print('[SUBIDA COMPLETADA] Commit ' + head[:12] + ' en ' + ROOT.name + ' / ' + branch, flush=True)
         return 0
     except EOFError:
