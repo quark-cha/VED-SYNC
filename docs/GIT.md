@@ -77,8 +77,25 @@ Si falta `origin`, pide la cuenta de GitHub o la URL del usuario de esta copia.
 Con una cuenta construye `https://github.com/CUENTA/VED-SYNC.git`. No contiene
 una cuenta personal predeterminada ni importa configuraciones de otros discos.
 Sólo guarda esa URL después de confirmar la operación.
-El repositorio de GitHub debe existir antes de publicar.
-No crea un repositorio remoto ni fuerza la subida si hay diferencias remotas.
+Si GitHub responde `Repository not found`, verifica la cuenta autenticada y consulta
+el destino. Si falta en su propia cuenta, pregunta:
+
+```text
+¿Lo creo? 1 Privado | 2 Público | 0 No crear [0]:
+```
+
+**1** crea un repositorio privado; **2** crea uno público; **0**, Intro o cerrar
+la entrada cancelan. Antes de crearlo vuelve a revisar el índice y todo el historial.
+No crea nada si no puede completar la revisión. Crea únicamente el repositorio
+vacío con el nombre de la carpeta raíz, sin README ni otros archivos iniciales,
+verifica la respuesta y reintenta la misma subida una sola vez. No crea un commit
+adicional para reintentar y no cambia la visibilidad de destinos existentes.
+
+La creación automática admite destinos HTTPS de `github.com` pertenecientes a la
+cuenta autenticada. Si la cuenta autorizada difiere del propietario, informa de
+ello sin afirmar que el repositorio no existe ni intentar crearlo. Los errores de
+autenticación, red o permisos tampoco se tratan como repositorios inexistentes.
+No fuerza la subida si hay diferencias remotas.
 
 Para usar otra cuenta o URL, entrar en **6 — OPERACIONES AVANZADAS** y elegir
 **10 — Configurar origin**. En ese menú se mantienen por separado **5** preparar,
@@ -134,7 +151,10 @@ Si el proyecto aún no tiene Git propio, estos pasos son **instrucciones futuras
 ./git.sh status
 ```
 
-Usar una URL sin credenciales incrustadas; la autenticación corresponde al gestor de credenciales de Git o SSH. Crear el repositorio GitHub y establecer su URL requiere autorización explícita; estos scripts no crean repositorios en GitHub. No usar por error el remoto de otro proyecto de SRC-VED.
+Usar una URL sin credenciales incrustadas; la autenticación corresponde al gestor
+de credenciales de Git o SSH. Crear el repositorio GitHub requiere elegir
+expresamente privado o público cuando se confirme que falta en la cuenta propia.
+No usar por error el remoto de otro proyecto de SRC-VED.
 
 Tras revisar las exclusiones, preparar, confirmar y efectuar el primer push mediante los subcomandos de la tabla, indicando el nombre real de la rama mostrado en `status`. A partir de entonces el menú puede publicar con el seguimiento existente. No se modifica automáticamente la identidad Git, configuración global, credenciales ni ramas. Una instalación de Git nueva puede necesitar configurar nombre y correo antes del primer commit.
 
@@ -184,6 +204,15 @@ al volver a elegir **2** se intenta publicar de nuevo.
 Los tokens se entregan al servidor elegido para autenticar operaciones HTTPS;
 eso es necesario para acceder. No forman parte de archivos, commits ni páginas
 publicadas. Con SSH, la autenticación se delega al cliente y agente SSH del usuario.
+
+Para verificar y crear un destino inexistente en GitHub, se obtiene temporalmente
+el acceso del mismo helper seguro mediante `git credential fill`, capturando
+siempre su salida para que no aparezca en la terminal. Se usa únicamente en la
+cabecera HTTPS de `api.github.com`, con redirecciones deshabilitadas. No se envía
+como URL, argumento de proceso, archivo, log o dato del repositorio. Se conserva
+en el helper seleccionado con `credential approve`, usando una tubería de entrada.
+Las peticiones de creación contienen sólo nombre, visibilidad elegida y
+`auto_init=false`; los archivos se publican después por el push revisado.
 El programa suprime las variables de trazas de Git/GCM de sus procesos y desactiva
 las redirecciones HTTP. El contenido de los secretos detectados nunca se imprime.
 
@@ -240,4 +269,7 @@ Las pruebas locales no requieren credenciales. No se leen ni copian las de Windo
 
 `./git.sh --help` y `.\git.bat --help` muestran las mismas instrucciones del controlador: alcance exclusivo de VED-SYNC, operaciones, autorización, secuencia manual de primer envío, códigos de salida y protecciones. Mostrar esta ayuda no ejecuta Git, no requiere un repositorio ni inicia autenticación. Los ejemplos impresos no se ejecutan.
 
-La ayuda distingue expresamente Git local y GitHub: `init` solo prepara el Git local; crear el repositorio de GitHub sigue pendiente y no se ha añadido como parte de esta revisión documental. Los cuatro lanzadores incluyen comentarios de uso; la lógica operativa del BAT permanece sin cambios.
+La ayuda distingue expresamente Git local y GitHub: `init` sólo prepara el Git
+local. La creación del destino en GitHub se ofrece al confirmar que falta en la
+cuenta propia y requiere elegir privado o público. Los cuatro lanzadores usan
+este mismo controlador y sus protecciones.

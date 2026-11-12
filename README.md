@@ -116,6 +116,13 @@ la web. En Ubuntu puede evitar introducir tokens instalando
 para autorizar el acceso. Mantiene el almacén protegido o la caché de memoria;
 no guarda tokens en archivos del proyecto. Un fallo de subida conserva el commit local.
 
+Si GitHub responde que no encuentra el repositorio, el programa verifica la
+cuenta autorizada. Si confirma que el destino falta en su propia cuenta, pregunta
+si desea crearlo **privado**, **público** o **no crearlo** (Intro cancela).
+Comprueba el índice y el historial antes de crear el destino; sólo tras la elección
+crea el repositorio vacío y reintenta la subida. No crea un segundo commit para
+ese reintento ni cambia la visibilidad de repositorios existentes.
+
 Ver [docs/INSTALACION.md](docs/INSTALACION.md). `git.sh` y `git.bat` operan sobre el `.git` propio de VED-SYNC; evitan actuar sobre el repositorio padre. En una terminal preguntan antes de crearlo si falta y abren un menú con revisiones y confirmaciones explícitas; sin terminal muestran sólo estado e instrucciones. Admiten `status`, `diff`, `log` y, con `--autorizar`, `init`, `fetch`, `pull`, `add`, `commit`, `remote` y `push`. Ambos utilizan `git_control.py` y rechazan el Git del padre. Ver [guía Git](docs/GIT.md).
 
 

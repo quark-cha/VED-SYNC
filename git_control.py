@@ -422,7 +422,10 @@ def github_request(method, path, token, payload=None):
                                'Content-Type': 'application/json', 'User-Agent': 'project-git-controller'})
     try:
         with build_opener(NoCredentialRedirect()).open(request, timeout=30) as response:
-            return response.status, json.loads(response.read(1048576))
+            data = json.loads(response.read(1048576))
+            if not isinstance(data, dict):
+                raise ValueError('Unexpected response')
+            return response.status, data
     except HTTPError as error:
         error.close()
         return error.code, {}
@@ -481,7 +484,10 @@ def offer_github_creation(repo, remote_name):
         raise GitError('No se puede confirmar que falte el repositorio (HTTP ' + str(status) + '). '
                        'No se ha intentado crearlo.')
     print('El repositorio no existe en su cuenta: ' + owner + '/' + ROOT.name)
-    answer = input('¿Lo creo? 1 Privado | 2 Público | 0 No crear [0]: ').strip().casefold()
+    try:
+        answer = input('¿Lo creo? 1 Privado | 2 Público | 0 No crear [0]: ').strip().casefold()
+    except EOFError:
+        answer = '0'
     if answer in ('', '0', 'n', 'no'):
         print('Creación cancelada. El commit local se conserva.')
         return False
@@ -715,7 +721,8 @@ def configure_remote():
         action = 'set-url' if 'origin' in remotes else 'add'
         code = main(['remote', '--autorizar', action, 'origin', url], confirm=True)
         if code == 0:
-            print('Origin configurado. El repositorio de GitHub debe existir antes de publicar.')
+            print('Origin configurado. Si falta el repositorio en su cuenta de GitHub, '
+                  'al publicar se preguntará si quiere crearlo.')
         return code
     except EOFError:
         print('Configuración cancelada.')
