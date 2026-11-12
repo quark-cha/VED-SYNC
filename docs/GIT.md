@@ -162,6 +162,25 @@ a las URL. No instala dependencias ni inicia autenticaciones al abrir el menú.
 [Helpers de Git](https://git-scm.com/doc/credential-helpers),
 [almacenes de GCM](https://github.com/git-ecosystem/git-credential-manager/blob/main/docs/credstores.md).
 
+Si falta GCM y está instalado `git-credential-oauth`, lo añade después del helper
+de almacenamiento. Cuando no existe una credencial vigente, abre el navegador
+para autorizar el acceso. Git no vuelve a preguntar por un token en la terminal
+si ese flujo falla. En Ubuntu, instalarlo una vez con:
+
+```bash
+sudo apt install git-credential-oauth
+```
+
+Después volver a ejecutar `./git.sh` y elegir **2**. No es necesario configurar
+helpers globales ni ejecutar `gh auth login`. Se mantiene el llavero o la caché
+de memoria previamente elegidos, sin habilitar almacenamiento en texto plano.
+[Documentación de git-credential-oauth](https://github.com/hickford/git-credential-oauth).
+
+El mensaje `Password for https://...@github.com` de Git espera un token de acceso,
+no la contraseña habitual de GitHub. La contraseña de `sudo` al instalar paquetes
+es la de Ubuntu. Cancelar una petición de acceso no borra un commit ya creado;
+al volver a elegir **2** se intenta publicar de nuevo.
+
 Los tokens se entregan al servidor elegido para autenticar operaciones HTTPS;
 eso es necesario para acceder. No forman parte de archivos, commits ni páginas
 publicadas. Con SSH, la autenticación se delega al cliente y agente SSH del usuario.

@@ -227,6 +227,9 @@ def secure_access(repo):
                     if shutil.which(name)), None)
     exec_path = repo.run('--exec-path', capture=True, required=False).stdout.strip()
     helper_dir = Path(exec_path) if exec_path else None
+    oauth = (bool(shutil.which('git-credential-oauth'))
+             or bool(helper_dir and any((helper_dir / name).is_file()
+                                        for name in ('git-credential-oauth', 'git-credential-oauth.exe'))))
     options = ['-c', 'credential.helper=', '-c', 'http.followRedirects=false']
     if manager:
         store = 'wincredman' if os.name == 'nt' else 'keychain' if sys.platform == 'darwin' else 'secretservice'
@@ -245,6 +248,16 @@ def secure_access(repo):
               'Para conservarlos entre sesiones, instale Git Credential Manager o libsecret.', flush=True)
     else:
         print('Acceso: Git solicitará las credenciales sin guardarlas en archivos.', flush=True)
+    if oauth and not manager:
+        # Storage runs first; OAuth only runs when no stored credential is available.
+        options += ['-c', 'credential.helper=oauth']
+        repo.env['GIT_TERMINAL_PROMPT'] = '0'
+        print('Identificación en el navegador: autorice el acceso a su cuenta. '
+              'No necesita escribir ni recordar un token.', flush=True)
+    elif not manager:
+        print('En GitHub, el campo Password de Git espera un token de acceso. '
+              'Para entrar mediante el navegador en Ubuntu, instale: '
+              'sudo apt install git-credential-oauth', flush=True)
     return options
 
 

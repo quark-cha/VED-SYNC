@@ -42,6 +42,25 @@ class PrivacyConfigurationTests(unittest.TestCase):
         self.assertIn('credential.helper=cache --timeout=900', options)
         self.assertNotIn('credential.helper=store', options)
 
+    @unittest.skipUnless(os.name == 'posix', 'Caché de memoria de Git en POSIX')
+    def test_oauth_opens_browser_after_checking_the_memory_cache(self):
+        repo = SimpleNamespace(env={}, run=lambda *a, **kw: SimpleNamespace(stdout=''))
+        def executable(name):
+            return '/usr/bin/git-credential-oauth' if name == 'git-credential-oauth' else None
+        with patch('git_control.shutil.which', side_effect=executable):
+            options = git_control.secure_access(repo)
+        self.assertLess(options.index('credential.helper=cache --timeout=900'),
+                        options.index('credential.helper=oauth'))
+        self.assertEqual(repo.env['GIT_TERMINAL_PROMPT'], '0')
+        self.assertNotIn('credential.helper=store', options)
+
+    def test_manager_does_not_chain_a_second_oauth_login(self):
+        repo = SimpleNamespace(env={}, run=lambda *a, **kw: SimpleNamespace(stdout=''))
+        with patch('git_control.shutil.which', return_value='/usr/bin/helper'):
+            options = git_control.secure_access(repo)
+        self.assertIn('credential.helper=manager', options)
+        self.assertNotIn('credential.helper=oauth', options)
+
     def test_private_filename_policy_is_independent_of_gitignore(self):
         for name in ['.env', 'nested/.env.local', '.git-credentials', '.gitconfig',
                      '.ssh/id_ed25519', '.aws/credentials', 'config/credentials.json', 'private.pem']:

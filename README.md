@@ -110,6 +110,12 @@ la publicación también revisa el historial. Nombre y correo sí forman parte d
 commit público: para ocultar el correo personal, usar un correo `noreply`.
 Ver [privacidad del acceso Git](docs/GIT.md#privacidad-y-credenciales).
 
+Si GitHub solicita `Password`, espera un token de acceso, no la contraseña de
+la web. En Ubuntu puede evitar introducir tokens instalando
+`sudo apt install git-credential-oauth`: el lanzador lo detecta y abre el navegador
+para autorizar el acceso. Mantiene el almacén protegido o la caché de memoria;
+no guarda tokens en archivos del proyecto. Un fallo de subida conserva el commit local.
+
 Ver [docs/INSTALACION.md](docs/INSTALACION.md). `git.sh` y `git.bat` operan sobre el `.git` propio de VED-SYNC; evitan actuar sobre el repositorio padre. En una terminal preguntan antes de crearlo si falta y abren un menú con revisiones y confirmaciones explícitas; sin terminal muestran sólo estado e instrucciones. Admiten `status`, `diff`, `log` y, con `--autorizar`, `init`, `fetch`, `pull`, `add`, `commit`, `remote` y `push`. Ambos utilizan `git_control.py` y rechazan el Git del padre. Ver [guía Git](docs/GIT.md).
 
 
