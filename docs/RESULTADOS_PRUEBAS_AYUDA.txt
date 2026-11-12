@@ -1,0 +1,60 @@
+test_argument_forwarding_and_script_location_with_spaces (tests.test_launchers.LauncherTests.test_argument_forwarding_and_script_location_with_spaces) ... ok
+test_default_simulation_once_from_another_directory (tests.test_launchers.LauncherTests.test_default_simulation_once_from_another_directory) ... ok
+test_explicit_apply_only_on_fixture_repositories (tests.test_launchers.LauncherTests.test_explicit_apply_only_on_fixture_repositories) ... ok
+test_help_does_not_start_synchronization (tests.test_launchers.LauncherTests.test_help_does_not_start_synchronization) ... ok
+test_help_with_apply_flag_does_not_create_ids_state_or_copies (tests.test_launchers.LauncherTests.test_help_with_apply_flag_does_not_create_ids_state_or_copies) ... ok
+test_windows_and_ubuntu_select_same_module_and_safe_defaults (tests.test_launchers.LauncherTests.test_windows_and_ubuntu_select_same_module_and_safe_defaults) ... ok
+test_add_forcing_metadata_or_paths_outside_project_is_rejected (tests.test_git_control.GitControlTests.test_add_forcing_metadata_or_paths_outside_project_is_rejected) ... ok
+test_add_previews_before_staging_and_uses_safe_path_separator (tests.test_git_control.GitControlTests.test_add_previews_before_staging_and_uses_safe_path_separator) ... ok
+test_both_entry_points_use_same_controller_and_bat_preserves_arguments (tests.test_git_control.GitControlTests.test_both_entry_points_use_same_controller_and_bat_preserves_arguments) ... ok
+test_commit_is_only_explicit_and_does_not_stage_or_push (tests.test_git_control.GitControlTests.test_commit_is_only_explicit_and_does_not_stage_or_push) ... ok
+test_default_checks_branch_changes_and_no_writes (tests.test_git_control.GitControlTests.test_default_checks_branch_changes_and_no_writes) ... ok
+test_detached_head_blocks_commit_pull_and_push (tests.test_git_control.GitControlTests.test_detached_head_blocks_commit_pull_and_push) ... ok
+test_environment_cannot_redirect_git_to_parent_or_external_index (tests.test_git_control.GitControlTests.test_environment_cannot_redirect_git_to_parent_or_external_index) ... ok
+test_eof_in_menu_never_writes (tests.test_git_control.GitControlTests.test_eof_in_menu_never_writes) ... ok
+test_every_mutation_requires_explicit_authorization (tests.test_git_control.GitControlTests.test_every_mutation_requires_explicit_authorization) ... ok
+test_git_failure_stops_sequence_and_preserves_exit_code (tests.test_git_control.GitControlTests.test_git_failure_stops_sequence_and_preserves_exit_code) ... ok
+test_help_explains_scope_steps_and_limits_without_running_git (tests.test_git_control.GitControlTests.test_help_explains_scope_steps_and_limits_without_running_git) ... ok
+test_help_needs_no_repository_and_ignores_write_examples (tests.test_git_control.GitControlTests.test_help_needs_no_repository_and_ignores_write_examples) ... ok
+test_menu_can_exit_without_mutation (tests.test_git_control.GitControlTests.test_menu_can_exit_without_mutation) ... ok
+test_menu_cancellation_never_stages_changes (tests.test_git_control.GitControlTests.test_menu_cancellation_never_stages_changes) ... ok
+test_menu_requires_review_then_confirmation_for_one_commit_only (tests.test_git_control.GitControlTests.test_menu_requires_review_then_confirmation_for_one_commit_only) ... ok
+test_missing_remote_or_upstream_blocks_network_actions (tests.test_git_control.GitControlTests.test_missing_remote_or_upstream_blocks_network_actions) ... ok
+test_parent_repository_is_never_used (tests.test_git_control.GitControlTests.test_parent_repository_is_never_used) ... ok
+test_pull_requires_clean_tree_and_only_fast_forward (tests.test_git_control.GitControlTests.test_pull_requires_clean_tree_and_only_fast_forward) ... ok
+test_push_is_single_current_branch_no_implicit_other_refs (tests.test_git_control.GitControlTests.test_push_is_single_current_branch_no_implicit_other_refs) ... ok
+test_push_upstream_is_explicit_and_force_delete_or_other_branch_rejected (tests.test_git_control.GitControlTests.test_push_upstream_is_explicit_and_force_delete_or_other_branch_rejected) ... ok
+test_read_operations_and_remote_show_do_not_trigger_network (tests.test_git_control.GitControlTests.test_read_operations_and_remote_show_do_not_trigger_network) ... ok
+test_root_mismatch_is_rejected (tests.test_git_control.GitControlTests.test_root_mismatch_is_rejected) ... ok
+test_tracked_ignored_files_block_commit_and_push (tests.test_git_control.GitControlTests.test_tracked_ignored_files_block_commit_and_push) ... ok
+test_git_check_ignore_in_disposable_repository (tests.test_git_control.GitIgnoreTests.test_git_check_ignore_in_disposable_repository) ... ok
+test_private_runtime_patterns_are_explicit (tests.test_git_control.GitIgnoreTests.test_private_runtime_patterns_are_explicit) ... ok
+test_bash_and_bat_share_controller_and_same_local_remote_configuration (tests.test_git_control.RealGitScriptTests.test_bash_and_bat_share_controller_and_same_local_remote_configuration) ... ok
+test_real_add_respects_all_internal_exclusions_without_commit (tests.test_git_control.RealGitScriptTests.test_real_add_respects_all_internal_exclusions_without_commit) ... ok
+test_real_commands_without_authorization_leave_index_config_and_head_unchanged (tests.test_git_control.RealGitScriptTests.test_real_commands_without_authorization_leave_index_config_and_head_unchanged) ... ok
+test_real_menu_cancellation_does_not_stage_or_create_commits (tests.test_git_control.RealGitScriptTests.test_real_menu_cancellation_does_not_stage_or_create_commits) ... ok
+test_real_parent_repository_is_rejected_if_project_git_is_absent (tests.test_git_control.RealGitScriptTests.test_real_parent_repository_is_rejected_if_project_git_is_absent) ... ok
+test_real_status_and_diff_keep_metadata_unchanged_from_other_directory (tests.test_git_control.RealGitScriptTests.test_real_status_and_diff_keep_metadata_unchanged_from_other_directory) ... ok
+test_cli_apply_verified (tests.test_cli.CliTests.test_cli_apply_verified) ... ok
+test_default_cli_simulates_and_returns_pending (tests.test_cli.CliTests.test_default_cli_simulates_and_returns_pending) ... ok
+test_git_script_refuses_parent_repository (tests.test_cli.CliTests.test_git_script_refuses_parent_repository) ... ok
+test_live_console_keeps_stdout_json_and_quiet_preserves_logs (tests.test_cli.CliTests.test_live_console_keeps_stdout_json_and_quiet_preserves_logs) ... ok
+test_missing_tkinter_reports_dependency (tests.test_cli.CliTests.test_missing_tkinter_reports_dependency) ... ok
+test_stale_staging_file_not_synchronized (tests.test_cli.CliTests.test_stale_staging_file_not_synchronized) ... ok
+test_watch_stops_on_interrupt (tests.test_cli.CliTests.test_watch_stops_on_interrupt) ... Proyecto detection [... indeterminado ...] 0/None B ETA indeterminado
+Detección de repositorios: 
+Estado a: amarillo
+Estado b: amarillo
+Estado c: amarillo
+Comparación de archivos y verificación SHA-256: 
+Estado a: verde
+Estado b: verde
+Estado c: verde
+Finalización: ok
+Proyecto confirmed [##########] 100.0% 0/0 B ETA indeterminado
+ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 12.075s
+
+OK

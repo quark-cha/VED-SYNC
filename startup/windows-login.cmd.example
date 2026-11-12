@@ -1,0 +1,5 @@
+@echo off
+rem Plantilla para una tarea al iniciar sesion, no instalada ni activada.
+rem Sustituir RUTA. Simulacion por defecto; usar pythonw con --gui si se desea.
+cd /d "C:\RUTA\SRC-VED\VED-SYNC"
+py -3 -m ved_sync --watch --config "C:\RUTA\SRC-VED\VED-SYNC\config\example.json"

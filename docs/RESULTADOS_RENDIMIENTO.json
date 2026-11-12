@@ -1,0 +1,22 @@
+{
+  "file_bytes": 16777216,
+  "repositories": 3,
+  "samples_seconds": {
+    "audit_enabled": [
+      10.864147494999997,
+      0.44810098800007836,
+      6.1851378430001205
+    ],
+    "reference_without_telemetry": [
+      2.254827867000131,
+      8.620570651999515,
+      18.53225231900069
+    ]
+  },
+  "median_seconds": {
+    "audit_enabled": 6.1851378430001205,
+    "reference_without_telemetry": 8.620570651999515
+  },
+  "relative_difference_percent": -28.251410577262693,
+  "scope": "Linux local fictitious repositories; includes fsync; no GUI or network"
+}

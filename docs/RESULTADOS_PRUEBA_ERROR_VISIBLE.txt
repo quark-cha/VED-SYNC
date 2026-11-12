@@ -1,0 +1,6 @@
+test_read_error_keeps_code_and_filename_in_final_display (tests.test_console.ConsoleTests.test_read_error_keeps_code_and_filename_in_final_display) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK

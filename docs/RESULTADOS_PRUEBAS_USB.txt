@@ -1,0 +1,15 @@
+test_duplicate_identity_blocks_selection (tests.test_usb_discovery.USBDiscoveryTests.test_duplicate_identity_blocks_selection) ... ok
+test_no_uuid_never_selects_any_usb (tests.test_usb_discovery.USBDiscoveryTests.test_no_uuid_never_selects_any_usb) ... ok
+test_reconnect_and_mount_rename_preserve_identity (tests.test_usb_discovery.USBDiscoveryTests.test_reconnect_and_mount_rename_preserve_identity) ... ok
+test_reject_parent_traversal (tests.test_usb_discovery.USBDiscoveryTests.test_reject_parent_traversal) ... ok
+test_symlink_mount_not_followed (tests.test_usb_discovery.USBDiscoveryTests.test_symlink_mount_not_followed) ... ok
+test_unmounted_matching_folder_stays_gray (tests.test_usb_discovery.USBDiscoveryTests.test_unmounted_matching_folder_stays_gray) ... ok
+test_wrong_or_absent_identity_never_enrolls (tests.test_usb_discovery.USBDiscoveryTests.test_wrong_or_absent_identity_never_enrolls) ... ok
+test_copy_guard_rejects_private_config_and_git_before_any_io (tests.test_internal_files.LocalFilesTests.test_copy_guard_rejects_private_config_and_git_before_any_io) ... ok
+test_private_name_is_explicitly_excluded_from_git_and_sync (tests.test_internal_files.LocalFilesTests.test_private_name_is_explicitly_excluded_from_git_and_sync) ... ok
+test_three_fictitious_repositories_keep_private_config_and_git_out_of_scan (tests.test_internal_files.LocalFilesTests.test_three_fictitious_repositories_keep_private_config_and_git_out_of_scan) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.031s
+
+OK

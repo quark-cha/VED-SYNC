@@ -1,0 +1,10 @@
+test_argument_forwarding_and_script_location_with_spaces (tests.test_launchers.LauncherTests.test_argument_forwarding_and_script_location_with_spaces) ... ok
+test_default_simulation_once_from_another_directory (tests.test_launchers.LauncherTests.test_default_simulation_once_from_another_directory) ... ok
+test_explicit_apply_only_on_fixture_repositories (tests.test_launchers.LauncherTests.test_explicit_apply_only_on_fixture_repositories) ... ok
+test_help_does_not_start_synchronization (tests.test_launchers.LauncherTests.test_help_does_not_start_synchronization) ... ok
+test_windows_and_ubuntu_select_same_module_and_safe_defaults (tests.test_launchers.LauncherTests.test_windows_and_ubuntu_select_same_module_and_safe_defaults) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.495s
+
+OK

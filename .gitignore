@@ -1,0 +1,70 @@
+__pycache__/
+*.py[cod]
+.venv/
+.ved-sync/
+.test-runs/
+*.egg-info/
+build/
+dist/
+demo/repos/*/*
+
+# Identidad local de cada repositorio (nunca versionar)
+.ved-sync-id
+
+# Artefactos locales de observabilidad y respaldo
+operaciones.jsonl
+operaciones.json
+tiempo.csv
+*.original
+
+# Metadatos y temporales excluidos tambien con Git propio de VED-SYNC
+.ved-sync-*
+*.log
+*.tmp
+**/state.json
+**/run.lock
+**/versions/
+
+# Configuración de ubicaciones propia de cada copia; nunca versionar
+.ved-sync-config.json
+
+# Cola FIFO local y auxiliares SQLite; nunca sincronizar ni versionar
+VED-Sync.cola
+VED-Sync.cola-journal
+VED-Sync.cola-wal
+VED-Sync.cola-shm
+VED-Sync.cola.log
+VED-Sync.cola.log.1
+VED-Sync.cola-mj*
+VED-Sync.historial
+VED-Sync.historial-journal
+VED-Sync.historial-wal
+VED-Sync.historial-shm
+
+# Credenciales y configuración privada de cada usuario: nunca distribuir
+.gitconfig
+.git-credentials
+.netrc
+_netrc
+.ssh/
+.gnupg/
+.aws/
+.azure/
+.gcm/
+.password-store/
+.env
+.env.*
+!.env.example
+!.env.sample
+credentials.json
+credentials.yaml
+credentials.yml
+secrets.json
+secrets.yaml
+secrets.yml
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519

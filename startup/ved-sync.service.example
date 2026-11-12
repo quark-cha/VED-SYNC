@@ -1,0 +1,14 @@
+# Plantilla: sustituir las rutas antes de instalar manualmente.
+# No se instala ni activa durante las pruebas. Simulación por defecto.
+[Unit]
+Description=VED-SYNC (simulacion)
+
+[Service]
+Type=simple
+WorkingDirectory=/RUTA/SRC-VED/VED-SYNC
+ExecStart=/usr/bin/python3 -m ved_sync --watch --config /RUTA/SRC-VED/VED-SYNC/config/example.json
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

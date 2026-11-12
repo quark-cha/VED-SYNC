@@ -1,0 +1,8 @@
+test_copy_guard_rejects_private_config_and_git_before_any_io (tests.test_internal_files.LocalFilesTests.test_copy_guard_rejects_private_config_and_git_before_any_io) ... ok
+test_private_name_is_explicitly_excluded_from_git_and_sync (tests.test_internal_files.LocalFilesTests.test_private_name_is_explicitly_excluded_from_git_and_sync) ... ok
+test_three_fictitious_repositories_keep_private_config_and_git_out_of_scan (tests.test_internal_files.LocalFilesTests.test_three_fictitious_repositories_keep_private_config_and_git_out_of_scan) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.005s
+
+OK

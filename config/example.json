@@ -1,0 +1,10 @@
+{
+  "project": "VED-SYNC-DEMO",
+  "interval_seconds": 5,
+  "state_dir": "../.ved-sync/demo",
+  "repositories": [
+    {"id": "uno", "path": "../demo/repos/uno"},
+    {"id": "dos", "path": "../demo/repos/dos"},
+    {"id": "tres", "path": "../demo/repos/tres"}
+  ]
+}

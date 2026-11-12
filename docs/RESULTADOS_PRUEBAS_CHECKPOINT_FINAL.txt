@@ -1,0 +1,10 @@
+test_checkpoint_failure_does_not_hide_interrupt_or_leave_lock (tests.test_checkpoints.CheckpointTests.test_checkpoint_failure_does_not_hide_interrupt_or_leave_lock) ... ok
+test_completed_files_are_not_copied_again_after_interruption (tests.test_checkpoints.CheckpointTests.test_completed_files_are_not_copied_again_after_interruption) ... ok
+test_interrupted_scan_saves_only_completed_hashes (tests.test_checkpoints.CheckpointTests.test_interrupted_scan_saves_only_completed_hashes) ... ok
+test_periodic_scan_checkpoint_occurs_before_final_save (tests.test_checkpoints.CheckpointTests.test_periodic_scan_checkpoint_occurs_before_final_save) ... ok
+test_simulated_interruption_does_not_save_cache (tests.test_checkpoints.CheckpointTests.test_simulated_interruption_does_not_save_cache) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.387s
+
+OK

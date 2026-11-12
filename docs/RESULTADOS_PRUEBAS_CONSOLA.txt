@@ -1,0 +1,33 @@
+test_ascii_terminal_uses_safe_icon_fallback (tests.test_console.ConsoleTests.test_ascii_terminal_uses_safe_icon_fallback) ... ok
+test_conflict_stays_red_and_never_reports_success (tests.test_console.ConsoleTests.test_conflict_stays_red_and_never_reports_success) ... ok
+test_idle_interrupt_does_not_turn_verified_completion_into_error (tests.test_console.ConsoleTests.test_idle_interrupt_does_not_turn_verified_completion_into_error) ... ok
+test_long_unicode_paths_do_not_wrap_or_inject_control_sequences (tests.test_console.ConsoleTests.test_long_unicode_paths_do_not_wrap_or_inject_control_sequences) ... ok
+test_redirected_output_has_one_final_snapshot_without_ansi (tests.test_console.ConsoleTests.test_redirected_output_has_one_final_snapshot_without_ansi) ... ok
+test_running_icon_and_unknown_counts_are_explicit (tests.test_console.ConsoleTests.test_running_icon_and_unknown_counts_are_explicit) ... ok
+test_state_and_bar_stay_on_same_two_rows_across_updates_and_cycles (tests.test_console.ConsoleTests.test_state_and_bar_stay_on_same_two_rows_across_updates_and_cycles) ... ok
+test_terminal_mode_is_restored_when_closing (tests.test_console.ConsoleTests.test_terminal_mode_is_restored_when_closing) ... ok
+test_unavailable_is_grey (tests.test_console.ConsoleTests.test_unavailable_is_grey) ... ok
+test_explicit_json_keeps_report_and_disables_fixed_display (tests.test_console.OutputRoutingTests.test_explicit_json_keeps_report_and_disables_fixed_display) ... ok
+test_interactive_terminal_has_no_json_block_and_only_two_display_rows (tests.test_console.OutputRoutingTests.test_interactive_terminal_has_no_json_block_and_only_two_display_rows) ... ok
+test_quiet_keeps_previous_json_behavior (tests.test_console.OutputRoutingTests.test_quiet_keeps_previous_json_behavior) ... ok
+test_cold_start_observed_rate_requires_real_window (tests.test_telemetry.TelemetryTests.test_cold_start_observed_rate_requires_real_window) ... ok
+test_console_does_not_show_child_100_as_file_completion (tests.test_telemetry.TelemetryTests.test_console_does_not_show_child_100_as_file_completion) ... ok
+test_console_names_are_human_readable_but_log_keeps_only_references (tests.test_telemetry.TelemetryTests.test_console_names_are_human_readable_but_log_keeps_only_references) ... ok
+test_console_throttles_and_reuses_tty_line (tests.test_telemetry.TelemetryTests.test_console_throttles_and_reuses_tty_line) ... ok
+test_failed_and_outlier_samples_do_not_bias_estimation (tests.test_telemetry.TelemetryTests.test_failed_and_outlier_samples_do_not_bias_estimation) ... ok
+test_file_counter_counts_unique_files_and_reconciles_verification (tests.test_telemetry.TelemetryTests.test_file_counter_counts_unique_files_and_reconciles_verification) ... ok
+test_global_estimate_requires_project_history (tests.test_telemetry.TelemetryTests.test_global_estimate_requires_project_history) ... ok
+test_history_estimates_and_adapts_to_observed_speed (tests.test_telemetry.TelemetryTests.test_history_estimates_and_adapts_to_observed_speed) ... ok
+test_history_is_bounded_and_csv_remains_readable (tests.test_telemetry.TelemetryTests.test_history_is_bounded_and_csv_remains_readable) ... ok
+test_incomplete_or_invalid_samples_are_ignored (tests.test_telemetry.TelemetryTests.test_incomplete_or_invalid_samples_are_ignored) ... ok
+test_interruption_never_publishes_success_or_100 (tests.test_telemetry.TelemetryTests.test_interruption_never_publishes_success_or_100) ... ok
+test_log_appends_across_runs_with_distinct_run_ids (tests.test_telemetry.TelemetryTests.test_log_appends_across_runs_with_distinct_run_ids) ... ok
+test_log_is_visible_before_close_and_omits_untrusted_details (tests.test_telemetry.TelemetryTests.test_log_is_visible_before_close_and_omits_untrusted_details) ... ok
+test_new_cycle_resets_file_count_without_persisting_display_location (tests.test_telemetry.TelemetryTests.test_new_cycle_resets_file_count_without_persisting_display_location) ... ok
+test_no_eta_without_reliable_history (tests.test_telemetry.TelemetryTests.test_no_eta_without_reliable_history) ... ok
+test_progress_updates_are_bounded_per_operation_and_project (tests.test_telemetry.TelemetryTests.test_progress_updates_are_bounded_per_operation_and_project) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 0.347s
+
+OK
